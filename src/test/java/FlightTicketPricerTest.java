@@ -17,10 +17,9 @@ public class FlightTicketPricerTest {
     @BeforeEach
     public void setUp() {
         pricer = new FlightTicketPricer();
-        standardMember = new LoyaltyMember(0, 0); // Khởi tạo hạng STANDARD
+        standardMember = new LoyaltyMember(0, 0, LoyaltyMember.AccountStatus.ACTIVE);  
     }
 
-    // Nhóm 1: Biến chạy là Age
     @ParameterizedTest(name = "Test Age {0} -> Expected: {3}")
     @CsvSource({
             "0, 4400, 16.0, 100000.0",
@@ -34,7 +33,6 @@ public class FlightTicketPricerTest {
             "120, 4400, 16.0, 1000000.0"
     })
     public void testAgeBoundaries(int age, int hours, double baggage, double expectedOutput) {
-        // 2. Hàm đã được sửa để truyền standardMember vào vị trí đầu tiên
         double actualPrice = pricer.calculateFinalPrice(standardMember, age, hours, baggage, baseFare);
         assertEquals(expectedOutput, actualPrice, 0.01, "Sai giá vé ở biến Age: " + age);
     }
