@@ -28,11 +28,11 @@ public class LoyaltyMember {
             return Tier.STANDARD;
         }
 
-        if (milesFlown >= 100000 || flightSegments >= 100) {
+        if (milesFlown >= 100000 || flightSegments >= 100) { 
             return Tier.PLATINUM;
-        } else if (milesFlown >= 50000 || flightSegments >= 50) {
+        } else if (milesFlown >= 500000 || flightSegments > 50) { //>=50, 50000
             return Tier.GOLD;
-        } else if (milesFlown >= 20000 || flightSegments >= 20) {
+        } else if (milesFlown >= 20000 || flightSegments > 30) { //>=20
             return Tier.SILVER;
         } else {
             return Tier.STANDARD;

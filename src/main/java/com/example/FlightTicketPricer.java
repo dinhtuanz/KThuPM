@@ -17,14 +17,14 @@ public class FlightTicketPricer {
 
         double currentFare;
         if (age <= 2) {
-            currentFare = baseFare * 0.10;
-        } else if (age <= 12) {
-            currentFare = baseFare * 0.75;
+            currentFare = baseFare * 0.1;
+        } else if (age <= 15) { //<=12
+            currentFare = baseFare * 0.65; // 0.75
         } else {
             currentFare = baseFare;
         }
 
-        if (hoursToDeparture <= 24) {
+        if (hoursToDeparture <= 30) { //<=24
             currentFare = currentFare * 1.20;
         }
 
@@ -38,9 +38,9 @@ public class FlightTicketPricer {
         }
 
         double freeAllowance = 20.0;
-        if (tier == LoyaltyMember.Tier.SILVER) freeAllowance = 25.0;
+        if (tier == LoyaltyMember.Tier.SILVER) freeAllowance = 25.0; //25.0
         else if (tier == LoyaltyMember.Tier.GOLD) freeAllowance = 30.0;
-        else if (tier == LoyaltyMember.Tier.PLATINUM) freeAllowance = 40.0;
+        else if (tier == LoyaltyMember.Tier.PLATINUM) freeAllowance = 32.0;
 
         double excessBaggageFee = 0.0;
         if (baggageWeightKg > freeAllowance) {

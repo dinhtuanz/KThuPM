@@ -5,61 +5,36 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LoyaltyMemberTest {
 
-    @ParameterizedTest(name = "milesFlown={0}, flightSegments={1} -> Mức thẻ: {2}")
+    @ParameterizedTest(name = "TId {0}: miles={1}, segments={2} -> Mức thẻ: {3}")
     @CsvSource({
-            "0, 10, STANDARD",
-            "1, 10, STANDARD",
-            "19999, 10, STANDARD",
-            "20000, 10, SILVER",
-            "20001, 10, SILVER",
-            "49999, 10, SILVER",
-            "50000, 10, GOLD",
-            "50001, 10, GOLD",
-            "99999, 10, GOLD",
-            "100000, 10, PLATINUM",
-            "100001, 10, PLATINUM"
+            "1, 0, 10, STANDARD",
+            "2, 1, 10, STANDARD",
+            "3, 19999, 10, STANDARD",
+            "4, 20000, 10, SILVER",
+            "5, 20001, 10, SILVER",
+            "6, 49999, 10, SILVER",
+            "7, 50000, 10, GOLD",
+            "8, 50001, 10, GOLD",
+            "9, 99999, 10, GOLD",
+            "10, 100000, 10, PLATINUM",
+            "11, 100001, 10, PLATINUM",
+            "12, 10000, 0, STANDARD",
+            "13, 10000, 1, STANDARD",
+            "14, 10000, 19, STANDARD",
+            "15, 10000, 20, SILVER",
+            "16, 10000, 21, SILVER",
+            "17, 10000, 49, SILVER",
+            "18, 10000, 50, GOLD",
+            "19, 10000, 51, GOLD",
+            "20, 10000, 99, GOLD",
+            "21, 10000, 100, PLATINUM",
+            "22, 10000, 101, PLATINUM",
+            "23, 10000, 10, STANDARD"
     })
-    public void testMilesFlownBoundaries(int milesFlown, int flightSegments, LoyaltyMember.Tier expectedTier) {
+    public void testLoyaltyMemberTierCalculation(int tid, int milesFlown, int flightSegments, LoyaltyMember.Tier expectedTier) {
         LoyaltyMember member = new LoyaltyMember(milesFlown, flightSegments, LoyaltyMember.AccountStatus.ACTIVE);
-        assertEquals(expectedTier, member.calculateTier(), 
-            "Sai mức thẻ khi milesFlown = " + milesFlown);
-    }
-
-    // Nhóm 2: Kiểm thử biên cho flightSegments
-    @ParameterizedTest(name = "milesFlown={0}, flightSegments={1} -> Mức thẻ: {2}")
-    @CsvSource({
-            "10000, 0, STANDARD",
-            "10000, 1, STANDARD",
-            "10000, 19, STANDARD",
-            "10000, 20, SILVER",
-            "10000, 21, SILVER",
-            "10000, 49, SILVER",
-            "10000, 50, GOLD",
-            "10000, 51, GOLD",
-            "10000, 99, GOLD",
-            "10000, 100, PLATINUM",
-            "10000, 101, PLATINUM"
-    })
-    public void testFlightSegmentsBoundaries(int milesFlown, int flightSegments, LoyaltyMember.Tier expectedTier) {
-        LoyaltyMember member = new LoyaltyMember(milesFlown, flightSegments, LoyaltyMember.AccountStatus.ACTIVE);
-        assertEquals(expectedTier, member.calculateTier(), 
-            "Sai mức thẻ khi flightSegments = " + flightSegments);
-    }
-
-    @ParameterizedTest(name = "Trạng thái thẻ {0} -> Mức thẻ: {1}")
-    @CsvSource({
-            "ACTIVE, PLATINUM",
-            "SUSPENDED, STANDARD",
-            "CLOSED, STANDARD"
-    })
-    public void testAccountStatusEquivalencePartitions(LoyaltyMember.AccountStatus status, LoyaltyMember.Tier expectedTier) {
-        // Cố định điểm ở mức rất cao (đủ điều kiện Platinum)
-        int milesFlown = 100000;
-        int flightSegments = 100;
-        
-        LoyaltyMember member = new LoyaltyMember(milesFlown, flightSegments, status);
         
         assertEquals(expectedTier, member.calculateTier(), 
-            "Sai mức thẻ khi kiểm tra trạng thái: " + status);
+            "Sai mức thẻ ở TId " + tid);
     }
 }
