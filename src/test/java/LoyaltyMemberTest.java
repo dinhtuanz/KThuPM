@@ -7,6 +7,7 @@ public class LoyaltyMemberTest {
 
     @ParameterizedTest(name = "TId {0}: miles={1}, segments={2} -> Mức thẻ: {3}")
     @CsvSource({
+            // Kiểm tra Dặm bay (milesFlown), giữ cố định flightSegments = 10 (ACTIVE)
             "1, 0, 10, STANDARD",
             "2, 1, 10, STANDARD",
             "3, 19999, 10, STANDARD",
@@ -18,6 +19,8 @@ public class LoyaltyMemberTest {
             "9, 99999, 10, GOLD",
             "10, 100000, 10, PLATINUM",
             "11, 100001, 10, PLATINUM",
+
+            // Kiểm tra Số chuyến bay (flightSegments), giữ cố định milesFlown = 10000 (ACTIVE)
             "12, 10000, 0, STANDARD",
             "13, 10000, 1, STANDARD",
             "14, 10000, 19, STANDARD",
@@ -29,11 +32,15 @@ public class LoyaltyMemberTest {
             "20, 10000, 99, GOLD",
             "21, 10000, 100, PLATINUM",
             "22, 10000, 101, PLATINUM",
+
+            // Ca cơ sở (Base Case)
             "23, 10000, 10, STANDARD"
     })
     public void testLoyaltyMemberTierCalculation(int tid, int milesFlown, int flightSegments, LoyaltyMember.Tier expectedTier) {
+        // Khởi tạo member với trạng thái ACTIVE cho tất cả 23 ca kiểm thử này
         LoyaltyMember member = new LoyaltyMember(milesFlown, flightSegments, LoyaltyMember.AccountStatus.ACTIVE);
         
+        // Kiểm tra logic phân hạng thẻ
         assertEquals(expectedTier, member.calculateTier(), 
             "Sai mức thẻ ở TId " + tid);
     }

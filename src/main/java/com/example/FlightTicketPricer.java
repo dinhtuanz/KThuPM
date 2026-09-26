@@ -2,49 +2,46 @@ package com.example;
 
 public class FlightTicketPricer {
 
-    public double calculateFinalPrice(LoyaltyMember member, int age, int hoursToDeparture, 
-                                      double baggageWeightKg, double baseFare) {
-        
+    public double calculateFinalPrice(boolean isVip, int age, int Hours,
+                                      double baggage, double baseFare) {
+
         if (age < 0 || age > 120) throw new IllegalArgumentException("Tuổi không hợp lệ.");
         if (baseFare <= 0) throw new IllegalArgumentException("Giá vé gốc phải > 0.");
-        if (hoursToDeparture < 2 || hoursToDeparture > 8760) {
+        if (Hours < 2 || Hours > 8760) {
             throw new IllegalStateException("Ngoài khung thời gian xuất vé (2h - 8760h).");
         }
-        if (baggageWeightKg < 0) throw new IllegalArgumentException("Hành lý không được âm.");
-        if (baggageWeightKg > 32.0) {
+        if (baggage < 0) throw new IllegalArgumentException("Hành lý không được âm.");
+        
+        // [LỖI 1]: Sửa 32kg thành 40kg 
+        if (baggage > 40.0) { 
             throw new IllegalStateException("Quy tắc an toàn: Không chấp nhận kiện hành lý quá 32kg.");
         }
-
-        double currentFare;
-        if (age <= 2) {
-            currentFare = baseFare * 0.1;
-        } else if (age <= 15) { //<=12
-            currentFare = baseFare * 0.65; // 0.75
-        } else {
-            currentFare = baseFare;
+        double totalDiscountPercentage = 0.0;
+        // [LỖI 2]: Sửa < 2 thành <= 2 
+        if ((age >= 0 && age <= 2) || (age >= 100 && age <= 120)) {
+            totalDiscountPercentage += 0.40;
+        } else if (age >= 2 && age < 12) {
+            totalDiscountPercentage += 0.20;
         }
-
-        if (hoursToDeparture <= 30) { //<=24
-            currentFare = currentFare * 1.20;
+        // [LỖI 3]: Sửa > 24 thành >= 24 
+        if (Hours >= 24 && Hours <= 8760) {
+            totalDiscountPercentage += 0.20;
         }
-
-        LoyaltyMember.Tier tier = member.calculateTier();
-        
-        switch (tier) {
-            case SILVER: currentFare *= 0.95; break;
-            case GOLD: currentFare *= 0.90; break;
-            case PLATINUM: currentFare *= 0.85; break;
-            case STANDARD: default: break;
+        if (isVip) {
+            // [LỖI 4]: Sửa giảm 20% thành 0% 
+            totalDiscountPercentage += 0.0; 
         }
-
+        // [LỖI 5]: Sửa 1.0 thành 0.8 
+        if (totalDiscountPercentage > 0.8) {
+            totalDiscountPercentage = 0.8;
+        }  
+        double currentFare = baseFare * (1.0 - totalDiscountPercentage);
         double freeAllowance = 20.0;
-        if (tier == LoyaltyMember.Tier.SILVER) freeAllowance = 25.0; //25.0
-        else if (tier == LoyaltyMember.Tier.GOLD) freeAllowance = 30.0;
-        else if (tier == LoyaltyMember.Tier.PLATINUM) freeAllowance = 32.0;
-
         double excessBaggageFee = 0.0;
-        if (baggageWeightKg > freeAllowance) {
-            excessBaggageFee = (baggageWeightKg - freeAllowance) * 150000.0;
+        
+        if (baggage > freeAllowance) {
+            // [LỖI 6]: thiếu 1 số 0 
+            excessBaggageFee = (baggage - freeAllowance) * 15000.0; 
         }
 
         return currentFare + excessBaggageFee;
